@@ -20,7 +20,9 @@ from .exceptions import ProtocolError, TransportError
 class Client:
     """ The Bankin Bridge API client class. """
 
-    def __init__(self, client_id, client_secret, base_url=None, http_max_retries=None):
+    def __init__(
+        self, client_id, client_secret, access_token=None, base_url=None, http_max_retries=None,
+    ):
         """ Initializes the Bankin Bridge client.
 
         :param client_id: application's client id
@@ -43,10 +45,19 @@ class Client:
         self.session = requests.Session()
         self.session.mount(self.api_endpoint, HTTPAdapter(max_retries=http_max_retries or 3))
 
+        # Initializes auth-related classes.
+        self.auth = None
+        if access_token:
+            self.set_access_token(access_token)
+
         # Set up entities attributes.
         self._account = None
         self._item = None
         self._user = None
+
+    def set_access_token(self, access_token):
+        """ Sets up authentication to use a specific access token. """
+        self.auth = BankinBridgeOAuth(access_token)
 
     ##########################
     # BANKIN BRIDGE ENTITIES #
@@ -95,12 +106,10 @@ class Client:
     # PRIVATE METHODS AND PROPERTIES #
     ##################################
 
-    def _call(self, http_method, path, access_token=None, params=None, data=None):
+    def _call(self, http_method, path, params=None, data=None):
         """ Calls the API endpoint. """
         # Prepares the headers and parameters that will be used to forge the request.
         headers = {'Bankin-Version': self.api_version, }
-        if access_token:
-            headers['Authorization'] = 'Bearer {}'.format(access_token)
         params = params or {}
         params.update({'client_id': self.client_id, 'client_secret': self.client_secret, })
 
@@ -110,7 +119,7 @@ class Client:
         try:
             response = request(
                 urljoin(self.api_endpoint, path).strip('/'),
-                headers=headers, params=params, json=data,
+                headers=headers, params=params, json=data, auth=self.auth,
             )
             response.raise_for_status()
         except HTTPError:
@@ -139,3 +148,15 @@ class Client:
             )
 
         return response_data
+
+
+class BankinBridgeOAuth(requests.auth.AuthBase):
+    """ Authentication class for authentication with Bankin Bridge OAuth2. """
+
+    def __init__(self, access_token):
+        self._access_token = access_token
+
+    def __call__(self, r):
+        """ Authorizes with the considered access token. """
+        r.headers['Authorization'] = 'Bearer ' + self._access_token
+        return r
