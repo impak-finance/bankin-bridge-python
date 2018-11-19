@@ -14,7 +14,7 @@ class Account(BaseApi):
     """ Wraps the account-related API methods. """
 
     def list(self, before=None, after=None, limit=None):
-        """ List the bank accounts associated with the considered user.
+        """ Lists the bank accounts associated with the considered user.
 
         :param before: cursor pointing to the end of the desired set
         :param after: cursor pointing to the start of the desired set
@@ -22,7 +22,7 @@ class Account(BaseApi):
         :type before: str
         :type after: str
         :type limit: int
-        :return: dictionary containing the generated redirect URL
+        :return: dictionary containing the bank accounts
         :rtype: dictionary
 
         """
@@ -30,3 +30,14 @@ class Account(BaseApi):
         return self._client._call(
             'GET', 'accounts', params={k: v for k, v in params.items() if v is not None},
         )
+
+    def get(self, id):
+        """ Retrieves the details of a single account.
+
+        :param id: ID of the considered bank account.
+        :type id: str or int
+        :return: dictionary containing the bank account details
+        :rtype: dictionary
+
+        """
+        return self._client._call('GET', 'accounts/{}'.format(id))
