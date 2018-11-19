@@ -53,6 +53,7 @@ class Client:
         # Set up entities attributes.
         self._account = None
         self._item = None
+        self._transaction = None
         self._user = None
 
     def set_access_token(self, access_token):
@@ -88,6 +89,19 @@ class Client:
             from .entities.item import Item
             self._item = Item(self)
         return self._item
+
+    @property
+    def transaction(self):
+        """ Allows to access the transaction entity.
+
+        :return: :class:`Transaction <Transaction>` object
+        :rtype: bridge.entities.transaction.Transaction
+
+        """
+        if self._transaction is None:
+            from .entities.transaction import Transaction
+            self._transaction = Transaction(self)
+        return self._transaction
 
     @property
     def user(self):

@@ -13,21 +13,6 @@ from ..baseapi import BaseApi
 class User(BaseApi):
     """ Wraps the user-related API methods. """
 
-    def create(self, email, password):
-        """ Creates a new user object.
-
-        :param email: user's email address
-        :param password: user's password
-        :type email: str
-        :type password: password
-        :return: dictionary containing the result of the creation operation
-        :rtype: dictionary
-
-        """
-        return self._client._call(
-            'POST', 'users', params={'email': email, 'password': password, },
-        )
-
     def authenticate(self, email, password, set_access_token=False):
         """ Authenticates a user.
 
@@ -47,3 +32,18 @@ class User(BaseApi):
         if set_access_token:
             self._client.set_access_token(data['access_token'])
         return data
+
+    def create(self, email, password):
+        """ Creates a new user object.
+
+        :param email: user's email address
+        :param password: user's password
+        :type email: str
+        :type password: password
+        :return: dictionary containing the result of the creation operation
+        :rtype: dictionary
+
+        """
+        return self._client._call(
+            'POST', 'users', params={'email': email, 'password': password, },
+        )

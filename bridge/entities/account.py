@@ -13,6 +13,17 @@ from ..baseapi import BaseApi
 class Account(BaseApi):
     """ Wraps the account-related API methods. """
 
+    def get(self, id):
+        """ Retrieves the details of a single account.
+
+        :param id: ID of the considered bank account
+        :type id: str or int
+        :return: dictionary containing the bank account details
+        :rtype: dictionary
+
+        """
+        return self._client._call('GET', 'accounts/{}'.format(id))
+
     def list(self, before=None, after=None, limit=None):
         """ Lists the bank accounts associated with the considered user.
 
@@ -30,14 +41,3 @@ class Account(BaseApi):
         return self._client._call(
             'GET', 'accounts', params={k: v for k, v in params.items() if v is not None},
         )
-
-    def get(self, id):
-        """ Retrieves the details of a single account.
-
-        :param id: ID of the considered bank account.
-        :type id: str or int
-        :return: dictionary containing the bank account details
-        :rtype: dictionary
-
-        """
-        return self._client._call('GET', 'accounts/{}'.format(id))
