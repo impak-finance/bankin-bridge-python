@@ -38,6 +38,6 @@ class Account(BaseApi):
 
         """
         params = {'before': before, 'after': after, 'limit': limit, }
-        return self._client._call(
+        return self._patch_paginated_response_data(self._client._call(
             'GET', 'accounts', params={k: v for k, v in params.items() if v is not None},
-        )
+        ))
