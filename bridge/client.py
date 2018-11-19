@@ -44,12 +44,26 @@ class Client:
         self.session.mount(self.api_endpoint, HTTPAdapter(max_retries=http_max_retries or 3))
 
         # Set up entities attributes.
+        self._account = None
         self._item = None
         self._user = None
 
     ##########################
     # BANKIN BRIDGE ENTITIES #
     ##########################
+
+    @property
+    def account(self):
+        """ Allows to access the account entity.
+
+        :return: :class:`Account <Account>` object
+        :rtype: bridge.entities.account.Account
+
+        """
+        if self._account is None:
+            from .entities.account import Account
+            self._account = Account(self)
+        return self._account
 
     @property
     def item(self):
