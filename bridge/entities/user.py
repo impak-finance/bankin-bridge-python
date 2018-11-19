@@ -28,17 +28,22 @@ class User(BaseApi):
             'POST', 'users', params={'email': email, 'password': password, },
         )
 
-    def authenticate(self, email, password):
-        """ Authenticate a user.
+    def authenticate(self, email, password, set_access_token=False):
+        """ Authenticates a user.
 
         :param email: user's email address
         :param password: user's password
+        :param set_access_token: whether to set the obtained access token on the client object
         :type email: str
         :type password: password
+        :type set_access_token: bool
         :return: dictionary containing the result of the authentication operation
         :rtype: dictionary
 
         """
-        return self._client._call(
+        data = self._client._call(
             'POST', 'authenticate', params={'email': email, 'password': password, },
         )
+        if set_access_token:
+            self._client.set_access_token(data['access_token'])
+        return data
