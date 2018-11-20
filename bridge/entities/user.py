@@ -47,3 +47,25 @@ class User(BaseApi):
         return self._client._call(
             'POST', 'users', params={'email': email, 'password': password, },
         )
+
+    def delete(self, id, password):
+        """ Removes all user objectts.
+
+        :param id: ID of the user
+        :param password: user's password
+        :type id: str or int
+        :type password: password
+        :return: empty dictionary
+        :rtype: dictionary
+
+        """
+        return self._client._call('DELETE', 'users/{}'.format(id), params={'password': password, })
+
+    def delete_all(self):
+        """ Removes all user objectts.
+
+        :return: empty dictionary
+        :rtype: dictionary
+
+        """
+        return self._client._call('DELETE', 'users')

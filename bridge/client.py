@@ -161,7 +161,7 @@ class Client:
 
         # Ensures the response body can be deserialized to JSON.
         try:
-            response_data = response.json()
+            response_data = response.json() if response.content else {}
         except ValueError as e:
             raise ProtocolError(
                 'Unable to deserialize response body: {}'.format(e), response=response,
