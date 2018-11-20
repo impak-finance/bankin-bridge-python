@@ -52,6 +52,7 @@ class Client:
 
         # Set up entities attributes.
         self._account = None
+        self._bank = None
         self._item = None
         self._transaction = None
         self._user = None
@@ -76,6 +77,19 @@ class Client:
             from .entities.account import Account
             self._account = Account(self)
         return self._account
+
+    @property
+    def bank(self):
+        """ Allows to access the bank entity.
+
+        :return: :class:`Bank <Bank>` object
+        :rtype: bridge.entities.bank.Bank
+
+        """
+        if self._bank is None:
+            from .entities.bank import Bank
+            self._bank = Bank(self)
+        return self._bank
 
     @property
     def item(self):

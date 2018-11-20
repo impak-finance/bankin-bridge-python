@@ -42,7 +42,7 @@ class Item(BaseApi):
         :type before: str
         :type after: str
         :type limit: int
-        :return: dictionary containing the bank accounts
+        :return: dictionary containing the items
         :rtype: dictionary
 
         """
