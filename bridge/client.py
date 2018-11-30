@@ -53,13 +53,19 @@ class Client:
         # Set up entities attributes.
         self._account = None
         self._bank = None
+        self._category = None
         self._item = None
+        self._stock = None
         self._transaction = None
         self._user = None
 
     def set_access_token(self, access_token):
         """ Sets up authentication to use a specific access token. """
         self.auth = BankinBridgeOAuth(access_token)
+
+    def remove_auth(self):
+        """ Destroys any configured authentication abstraction. """
+        self.auth = None
 
     ##########################
     # BANKIN BRIDGE ENTITIES #
@@ -92,6 +98,19 @@ class Client:
         return self._bank
 
     @property
+    def category(self):
+        """ Allows to access the category entity.
+
+        :return: :class:`Category <Category>` object
+        :rtype: bridge.entities.category.Category
+
+        """
+        if self._category is None:
+            from .entities.category import Category
+            self._category = Category(self)
+        return self._category
+
+    @property
     def item(self):
         """ Allows to access the item entity.
 
@@ -103,6 +122,19 @@ class Client:
             from .entities.item import Item
             self._item = Item(self)
         return self._item
+
+    @property
+    def stock(self):
+        """ Allows to access the stock entity.
+
+        :return: :class:`Stock <Stock>` object
+        :rtype: bridge.entities.stock.Stock
+
+        """
+        if self._stock is None:
+            from .entities.stock import Stock
+            self._stock = Stock(self)
+        return self._stock
 
     @property
     def transaction(self):
